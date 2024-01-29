@@ -12,7 +12,7 @@ class Author(models.Model):
         pRat = 0
         pRat += postRat.get('postRating')
 
-        commentRat = self.authorUser.comment_set.aggregate(commentRating=Sum('rating'))
+        commentRat = self.author.comment_set.aggregate(commentRating=Sum('rating'))
         cRat = 0
         cRat += commentRat.get('commentRating')
 
@@ -25,6 +25,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
+
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
     NEWS = 'NW'
@@ -48,6 +49,9 @@ class Post(models.Model):
         self.rating -= 1
         self.save()
 
+    def preview(self):
+        return self.text[0:123] + '...'
+
 
 class PostCategory(models.Model):
     postThrough = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -56,7 +60,7 @@ class PostCategory(models.Model):
 
 class Comment(models.Model):
     commentPost = models.ForeignKey(Post, on_delete=models.CASCADE)
-    CommentUser = models.ForeignKey(User, on_delete=models.CASCADE)
+    commentUser = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     dateCreation = models.DateTimeField(auto_now_add=True)
     rating = models.SmallIntegerField(default=0)
