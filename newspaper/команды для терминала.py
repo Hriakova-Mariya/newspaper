@@ -53,8 +53,8 @@ Comment.objects.get(id=4).like()
 Comment.objects.get(id=4).like()
 
 # Обновление рейтинга пользователей
-u1.update_rating()
-u2.update_rating()
+Author.objects.get(id=1).update_rating()
+Author.objects.get(id=2).update_rating()
 
 # вывод данных
 first_author=Author.objects.order_by('-rating_author')[:1]
