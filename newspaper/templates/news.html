@@ -1,0 +1,28 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Новости
+{% endblock title%}
+
+{% block content %}
+<h1 style="text-align: center;">Новости</h1>
+<h3 style="text-align: center;">{{ news|length }}</h3>
+
+{% if news %}
+     {% for separateNews in news %}
+        <table style="text-align: center;">
+        <hr>
+        <tr>
+            <td>{{ separateNews.title }}</td>
+        </tr>
+         <tr>
+            <td>{{ separateNews.dateCreation|date:'d M Y' }}</td>
+        </tr>
+         <tr>
+            <td>{{ separateNews.text|truncatewords:20 }}</td>
+        </tr>
+        </table>
+        {% endfor %}
+    {% else %} <h2>Новостей пока нет</h2>
+{% endif %}
+{% endblock content %}
