@@ -2,7 +2,7 @@ from django import template
 
 register = template.Library()
 
-CENSOR_WORD= ['Спорт', 'темы', 'пломбы']
+CENSOR_WORD = ['Спорт', 'темы', 'пломбы']
 
 @register.filter()
 def censor(value):
