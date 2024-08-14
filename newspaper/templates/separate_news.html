@@ -9,9 +9,9 @@
 <h1 style="text-align: center;">{{ news.title }}</h1>
 <hr>
 {% if 'AR' in news.categoryType %}
-    <p>Cтатья, {{ news.postCategory }}. Автор {{ news.author.author.username }}. Дата создания {{ news.dateCreation|date:'d M Y' }}</p>
+    <p>Cтатья. Автор {{ news.author.author.username }}. Дата создания {{ news.dateCreation|date:'d M Y' }}</p>
 {% else %}
-    <p>Новость, {{ news.postCategory }}. Автор {{ news.author.author.username }}. Дата создания {{ news.dateCreation|date:'d M Y' }}</p>
+    <p>Новость. Автор {{ news.author.author.username }}. Дата создания {{ news.dateCreation|date:'d M Y' }}</p>
 {% endif %}
 <p>{{ news.text|censor }} </p>
 <p style="text-align: right;">Рейтинг:{{ news.rating }}          .</p>

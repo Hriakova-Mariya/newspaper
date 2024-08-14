@@ -1,8 +1,12 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import (ListView, DetailView, CreateView,
+                                  UpdateView, DeleteView
+                                  )
+from django.urls import reverse_lazy
 from .models import Post, Comment
 from datetime import datetime
 from .filters import NewsFilter
+from .forms import NewsForm
 
 
 # Create your views here.
@@ -23,6 +27,7 @@ class News(ListView):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
         context['next_sale'] = None
+        context['filterset'] = self.filterset
         return context
 
 class SeparateNews(DetailView):
@@ -42,3 +47,67 @@ class CommentNews(DetailView):
     template_name = 'separate_news.html'
     context_object_name = 'comment'
 
+class NewsCreate(CreateView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'create_news.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.postCategory.set(object.post.postCategory('NW'))
+        return super().form_valid(form)
+
+
+class NewsUpdate(UpdateView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'edit_news.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.postCategory = 'NW'
+        return super().form_valid(form)
+
+
+class NewsDelete(DeleteView):
+    model = Post
+    template_name = 'delete_news.html'
+    success_url = reverse_lazy('news.html')
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.postCategory = 'NW'
+        return super().form_valid(form)
+
+
+class ArticleCreate(CreateView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'create_article.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.postCategory = 'AR'
+        return super().form_valid(form)
+
+
+class ArticleUpdate(UpdateView):
+    form_class = NewsForm
+    model = Post
+    template_name = 'edit_article.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.postCategory = 'AR'
+        return super().form_valid(form)
+
+
+class ArticleDelete(DeleteView):
+    model = Post
+    template_name = 'delete_article.html'
+    success_url = reverse_lazy('news.html')
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.postCategory = 'AR'
+        return super().form_valid(form)
