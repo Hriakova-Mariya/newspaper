@@ -8,6 +8,10 @@
 {% block content %}
     <h1>Удалить статью</h1>
     <hr>
+    <p>Статья. Автор: {{ object.author.author.username }}. Дата создания: {{ object.dateCreation|date:'d M Y' }}</p>
+    <p>{{ object.text|censor }} </p>
+    <p style="text-align: right;">Рейтинг:{{ object.rating }}          .</p>
+    <hr>
     <form action="" method="post">
         {% csrf_token %}
         <p> Удалить эту статью "{{ object.title }}"?</p>

@@ -4,8 +4,8 @@ from .views import (News, SeparateNews, NewsCreate, NewsUpdate, NewsDelete,
                     )
 
 urlpatterns =[
-    path('', News.as_view()),
-    path('<int:pk>', SeparateNews.as_view()),
+    path('', News.as_view(), name='news'),
+    path('<int:pk>', SeparateNews.as_view(), name='separate'),
     path('create/', NewsCreate.as_view(), name='create_news'),
     path('<int:pk>/edit/', NewsUpdate.as_view(), name='update_news'),
     path('<int:pk>/delete/', NewsDelete.as_view(), name='delete_new'),

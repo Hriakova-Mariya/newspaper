@@ -51,10 +51,13 @@ class NewsCreate(CreateView):
     form_class = NewsForm
     model = Post
     template_name = 'create_news.html'
+    success_url = reverse_lazy('create_news')
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        post.postCategory.set(object.post.postCategory('NW'))
+        if self.request.path == '/news/create/':
+            post.categoryType = 'NW'
+        post.save()
         return super().form_valid(form)
 
 
@@ -62,52 +65,36 @@ class NewsUpdate(UpdateView):
     form_class = NewsForm
     model = Post
     template_name = 'edit_news.html'
+    success_url = reverse_lazy('news')
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        post.postCategory = 'NW'
+        post.categoryType = 'NW'
         return super().form_valid(form)
 
 
 class NewsDelete(DeleteView):
     model = Post
     template_name = 'delete_news.html'
-    success_url = reverse_lazy('news.html')
-
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.postCategory = 'NW'
-        return super().form_valid(form)
+    success_url = reverse_lazy('news')
 
 
 class ArticleCreate(CreateView):
     form_class = NewsForm
     model = Post
     template_name = 'create_article.html'
-
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.postCategory = 'AR'
-        return super().form_valid(form)
+    success_url = reverse_lazy('create_article')
 
 
 class ArticleUpdate(UpdateView):
     form_class = NewsForm
     model = Post
     template_name = 'edit_article.html'
-
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.postCategory = 'AR'
-        return super().form_valid(form)
+    success_url = reverse_lazy('news')
 
 
 class ArticleDelete(DeleteView):
     model = Post
     template_name = 'delete_article.html'
-    success_url = reverse_lazy('news.html')
+    success_url = reverse_lazy('news')
 
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.postCategory = 'AR'
-        return super().form_valid(form)

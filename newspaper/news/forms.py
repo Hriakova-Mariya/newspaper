@@ -10,4 +10,5 @@ class NewsForm(forms.ModelForm):
             'title',
             'text',
             'author',
+            'postCategory'
         ]
