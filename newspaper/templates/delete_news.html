@@ -2,16 +2,16 @@
 {% load custom_filters %}
 
 {% block title %}
-Удалить новость {{ object.title }}
+Удалить новость {{ object.title|truncatechars:20 }}
 {% endblock title %}
 
 {% block content %}
 
     <h1>Удалить новость</h1>
     <hr>
-    <p>Новость. Автор: {{ news.author.author.username }}. Дата создания: {{ news.dateCreation|date:'d M Y' }}</p>
-    <p>{{ news.text|censor }} </p>
-    <p style="text-align: right;">Рейтинг:{{ news.rating }}          .</p>
+    <p>Новость. Автор {{ object.author.author.username }}. Дата создания {{ object.dateCreation|date:'d M Y' }}</p>
+    <p> {{ object.text|censor }} </p>
+    <p style="text-align: right;">Рейтинг:{{ object.rating }}          .</p>
     <hr>
     <form action="" method="post">
         {% csrf_token %}

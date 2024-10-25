@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic import (ListView, DetailView, CreateView,
-                                  UpdateView, DeleteView
-                                  )
 from django.urls import reverse_lazy
 from .models import Post, Comment
 from datetime import datetime
 from .filters import NewsFilter
 from .forms import NewsForm
+from django.views.generic import (ListView, DetailView, CreateView,
+                                  UpdateView, DeleteView
+                                  )
 
 
 # Create your views here.
@@ -30,10 +30,11 @@ class News(ListView):
         context['filterset'] = self.filterset
         return context
 
+
 class SeparateNews(DetailView):
     model = Post
     template_name = 'separate_news.html'
-    context_object_name = 'news'
+    context_object_name = 'separate_news'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,12 +48,14 @@ class CommentNews(DetailView):
     template_name = 'separate_news.html'
     context_object_name = 'comment'
 
+
 class NewsCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post',)
+    raise_exception = True
     form_class = NewsForm
     model = Post
     template_name = 'create_news.html'
-    success_url = reverse_lazy('create_news')
+    success_url = reverse_lazy('separate_news')
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -67,7 +70,7 @@ class NewsUpdate(PermissionRequiredMixin, UpdateView):
     form_class = NewsForm
     model = Post
     template_name = 'edit_news.html'
-    success_url = reverse_lazy('news')
+    success_url = reverse_lazy('separate_news')
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -87,7 +90,7 @@ class ArticleCreate(PermissionRequiredMixin, CreateView):
     form_class = NewsForm
     model = Post
     template_name = 'create_article.html'
-    success_url = reverse_lazy('create_article')
+    success_url = reverse_lazy('separate_news')
 
 
 class ArticleUpdate(PermissionRequiredMixin, UpdateView):
@@ -95,7 +98,7 @@ class ArticleUpdate(PermissionRequiredMixin, UpdateView):
     form_class = NewsForm
     model = Post
     template_name = 'edit_article.html'
-    success_url = reverse_lazy('news')
+    success_url = reverse_lazy('separate_news')
 
 
 class ArticleDelete(PermissionRequiredMixin, DeleteView):
@@ -103,4 +106,3 @@ class ArticleDelete(PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'delete_article.html'
     success_url = reverse_lazy('news')
-

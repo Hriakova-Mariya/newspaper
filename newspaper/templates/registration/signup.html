@@ -1,7 +1,6 @@
-{% extends 'flatpages/default.html' %}
+{% extends "flatpages/default.html" %}
 
 {% block content %}
-
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

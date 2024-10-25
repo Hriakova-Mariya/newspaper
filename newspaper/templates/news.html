@@ -2,6 +2,7 @@
 
 {% load custom_filters %}
 
+
 {% block title %}
 Новости
 {% endblock title%}
@@ -9,70 +10,69 @@
 {% block content %}
     <h1 style="text-align: center;">Новости</h1>
     <h3 style="text-align: center;">Новостей на странице : {{ news|length }}</h3>
-
     <form action="" method="get">
         {{ filterset.form.as_p }}
         <input type="submit" value="Найти" />
     </form>
 
-    {% if.perms.news.add_post %}
-        <a href="{% url 'news_create' %}">Добавить новость</a>
-        <a href="{% url 'article_create' %}">Добавить статью</a>
+    {% if perms.news.add_post %}
+    <a href="{% url 'create_news' %}">Добавить новость</a>
+    <a href="{% url 'create_article' %}">Добавить статью</a>
     {% endif %}
 
     {% if news %}
-
-        {% if perms.news.change_news or perms.news.change_article %}
+        {% if perms.news.change_post or perms.news.delete_post %}
             <td>Действия</td>
         {% endif %}
 
         {% for separateNews in news %}
-            <table style="text-align: center;">
+            <table>
             <hr>
             <tr>
-                <td style="text-align: center;">{{ separateNews.title }}</td>
+            <td style="text-align: center;">{{ separateNews.title }}</td>
             </tr>
             <tr>
             <td style="text-align: center;">{{ separateNews.dateCreation|date:'d M Y' }}</td>
             </tr>
             <tr>
-                <td style="text-align: center;">{{ separateNews.text|truncatewords:20 }}</td>
+            <td style="text-align: center;">{{ separateNews.text|truncatewords:20 }}</td>
             </tr>
-            {% if perms.news.change_news %}
-                <a href="{% url 'update_news' pk=news.id %}">Изменить</a>
-            {% else perms.news.change_article %}
-                <a href="{% url 'update_article' pk=news.id %}">Изменить</a>
+
+            {% if perms.news.change_post and separateNews.categoryType == 'NW' %}
+                <a href="{% url 'update_news'  pk=separateNews.id %}">Изменить</a>
+            {% elif perms.news.change_post and separateNews.categoryType == 'AR' %}
+                 <a href="{% url 'update_article' pk=separateNews.id %}">Изменить</a>
             {% endif %}
-            {% if perms.news.delete_news %}
-                <a href="{% url 'delete_news' pk=news.id%}">Удалить</a>
-            {% else perms.news.delete_article %}
-                <a href="{% url 'delete_article' %}">Удалить</a>
+
+            {% if perms.news.delete_post and separateNews.categoryType == 'NW' %}
+                <a href="{% url 'delete_news' pk=separateNews.id %}">Удалить</a>
+            {% elif perms.news.delete_post and separateNews.categoryType == 'AR' %}
+                <a href="{% url 'delete_article' pk=separateNews.id %}">Удалить</a>
             {% endif %}
             </table>
-            {% endfor %}
-        {% else %} <h2>Новостей пока нет</h2>
+        {% endfor %}
+    {% else %} <h2>Новостей пока нет</h2>
     {% endif %}
 
     {# Пагинация. Информация о предыдущих страницах #}
     {% if page_obj.has_previous %}
-        <a href="?{% url_replace page=1 %}">1</a>
-        {% if page_obj.previous_page_name != 1 %}
-            ...
-            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
-        {% endif %}
-    {% endif %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
 
     {# Информация о текущей странице #}
-    {% if page_obj.number %}
-    {% endif %}
+    {{ page_obj.number }}
 
     {# Информация о следующих страницах #}
     {% if page_obj.has_next %}
-        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-        {% if paginator.num_pages != page_obj.next_page_number %}
-            ...
-            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
-        {% endif %}
-    {% endif %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
 
 {% endblock content %}

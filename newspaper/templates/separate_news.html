@@ -2,18 +2,18 @@
 {% load custom_filters %}
 
 {% block title %}
-{{ news.title|truncatechars:20 }}
+{{ separate_news.title|truncatechars:20 }}
 {% endblock title %}
 
 {% block content %}
-<h1 style="text-align: center;">{{ news.title }}</h1>
+<h1 style="text-align: center;">{{ separate_news.title }}</h1>
 <hr>
     {% if 'AR' in news.categoryType %}
-        <p>Cтатья. Автор {{ news.author.author.username }}. Дата создания {{ news.dateCreation|date:'d M Y' }}</p>
+        <p>Cтатья. Автор {{ separate_news.author.author.username }}. Дата создания {{ separate_news.dateCreation|date:'d M Y' }}</p>
     {% else %}
-        <p>Новость. Автор {{ news.author.author.username }}. Дата создания {{ news.dateCreation|date:'d M Y' }}</p>
+        <p>Новость. Автор {{ separate_news.author.author.username }}. Дата создания {{ separate_news.dateCreation|date:'d M Y' }}</p>
     {% endif %}
-<p>{{ news.text|censor }} </p>
-<p style="text-align: right;">Рейтинг:{{ news.rating }}          .</p>
+<p>{{ separate_news.text|censor }} </p>
+<p style="text-align: right;">Рейтинг:{{ separate_news.rating }}          .</p>
 <hr>
 {% endblock content %}
