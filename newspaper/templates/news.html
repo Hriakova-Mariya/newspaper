@@ -29,7 +29,7 @@
             <table>
             <hr>
             <tr>
-            <td style="text-align: center;">{{ separateNews.title }}</td>
+            <td style="text-align: center;"><a href="{% url 'separate_news' pk=separateNews.id %}">{{ separateNews.title }}</a></td>
             </tr>
             <tr>
             <td style="text-align: center;">{{ separateNews.dateCreation|date:'d M Y' }}</td>

@@ -1,13 +1,18 @@
+from django.contrib.auth.models import Group
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from .models import Post, Comment
+from .models import Post, Comment, Subscription, Category, Author
 from datetime import datetime
 from .filters import NewsFilter
 from .forms import NewsForm
 from django.views.generic import (ListView, DetailView, CreateView,
                                   UpdateView, DeleteView
                                   )
-
+from django.contrib.auth.decorators import login_required
+from django.db.models import Exists, OuterRef
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 
@@ -106,3 +111,52 @@ class ArticleDelete(PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'delete_article.html'
     success_url = reverse_lazy('news')
+
+@login_required
+@csrf_protect
+def subscriptions(request):
+    if request.method == 'POST':
+        category_id = request.POST.get('category_id')
+        category = Category.objects.get(id=category_id)
+        action = request.POST.get('action')
+
+        if action == 'subscribe':
+            Subscription.objects.create(
+                user=request.user,
+                category=category
+            )
+        elif action == 'unsubscribe':
+            Subscription.objects.filter(
+                user=request.user,
+                category=category,
+            ).delete()
+
+    categories_with_subscriptions = Category.objects.annotate(
+        user_subscribed=Exists(
+            Subscription.objects.filter(
+                user=request.user,
+                category=OuterRef('pk'),
+            )
+        )
+    ).order_by('id')
+    return render(
+        request,
+        'subscriptions.html',
+        {'categories': categories_with_subscriptions},
+    )
+
+@login_required
+@csrf_protect
+def be_author(self, request):
+    if request.method == 'POST':
+        group_id = request.Group.get('group_id')
+        group_authors =
+        action = request.POST.get('action')
+        if action == 'subscribe':
+            user=super().save(request)
+            authors = Group.objects.get(name="authors")
+            user.groups.add(authors)
+    return render(
+        request,
+        'be_author.html',
+    )
